@@ -1,0 +1,12 @@
+.team-heading {
+    background-color: rgba(17, 17, 107, 0.253);
+}
+
+.text-center {
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+    font-weight: 900;
+}
+
+.card {
+    margin: 50px;
+}

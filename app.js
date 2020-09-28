@@ -32,6 +32,12 @@ function init() {
             name: "id",
             type: "input",
             message: "What is this employee's ID?",
+            validate: function(input) {
+                if (isNaN(input)) {
+                    console.log("\x1b[31m", "\nPlease enter a valid number");
+                }
+                return !isNaN(input);
+            }
         },
         {
             name: "email",
@@ -73,6 +79,12 @@ function init() {
                         name: "officeNumber",
                         type: "input",
                         message: "What is this employee's office number?",
+                        validate: function(input) {
+                            if (isNaN(input)) {
+                                console.log("\x1b[31m", "\nPlease enter a valid office number");
+                            }
+                            return !isNaN(input);
+                        }
                     }
                 ]).then(function(response) {
                     if(employeeList.find(employee => employee.getRole() === "Manager" ) !== undefined) {
