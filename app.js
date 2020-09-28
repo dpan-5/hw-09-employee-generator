@@ -75,9 +75,15 @@ function init() {
                         message: "What is this employee's office number?",
                     }
                 ]).then(function(response) {
-                    const manager = new Manager(newEmployee.name, newEmployee.id, newEmployee.email, response.officeNumber);
-                    employeeList.push(manager);
-                    promptConfirm();
+                    if(employeeList.find(employee => employee.getRole() === "Manager" ) !== undefined) {
+                        console.log("\x1b[31m", "******* You cannot add more than one manager on a team! *******");
+                        promptConfirm();
+                    }
+                    else {
+                        const manager = new Manager(newEmployee.name, newEmployee.id, newEmployee.email, response.officeNumber);
+                        employeeList.push(manager);
+                        promptConfirm();
+                    }
                 });
                 break;      
         }
@@ -93,8 +99,11 @@ function promptConfirm() {
             message: "Would you like to add another employee?"
         }
     ]).then(function(response) {
-        console.log(employeeList);
         if(response.addAnother === true) {
+            init();
+        }
+        else if(employeeList.find(employee => employee.getRole() === "Manager" ) == undefined) {
+            console.log("\x1b[31m", "******* Please add a Manager to the team. *******");
             init();
         }
         else {
