@@ -10,6 +10,105 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+// List of employees
+const employeeList = [];
+
+
+// Inquirer for adding employees
+function init() {
+    inquirer.prompt([
+        {
+            name: "role",
+            type: "list",
+            message: "What kind of team member would you like to add?",
+            choices: ["Engineer", "Intern", "Manager"]
+        },
+        {
+            name: "name",
+            type: "input",
+            message: "What is this employee's name?",
+        },
+        {
+            name: "id",
+            type: "input",
+            message: "What is this employee's ID?",
+        },
+        {
+            name: "email",
+            type: "input",
+            message: "What is this employee's email?",
+        }
+    ]).then(function(response) {
+        let newEmployee = response;
+        switch(response.role) {
+            case "Engineer":
+                inquirer.prompt([
+                    {
+                        name: "github",
+                        type: "input",
+                        message: "What is this employee's GitHub username?",
+                    }
+                ]).then(function(response) {
+                    const engineer = new Engineer(newEmployee.name, newEmployee.id, newEmployee.email, response.github);
+                    employeeList.push(engineer);
+                    promptConfirm();
+                });
+                break;
+            case "Intern":
+                inquirer.prompt([
+                    {
+                        name: "school",
+                        type: "input",
+                        message: "What is this employee's school?",
+                    }
+                ]).then(function(response) {
+                    const intern = new Intern(newEmployee.name, newEmployee.id, newEmployee.email, response.school);
+                    employeeList.push(intern);
+                    promptConfirm();
+                });
+                break;
+            case "Manager":
+                inquirer.prompt([
+                    {
+                        name: "officeNumber",
+                        type: "input",
+                        message: "What is this employee's office number?",
+                    }
+                ]).then(function(response) {
+                    const manager = new Manager(newEmployee.name, newEmployee.id, newEmployee.email, response.officeNumber);
+                    employeeList.push(manager);
+                    promptConfirm();
+                });
+                break;      
+        }
+    });
+}
+
+// Confirms with the user whether or not they want to add another employee
+function promptConfirm() {
+    inquirer.prompt([
+        {
+            name: "addAnother",
+            type: "confirm",
+            message: "Would you like to add another employee?"
+        }
+    ]).then(function(response) {
+        console.log(employeeList);
+        if(response.addAnother === true) {
+            init();
+        }
+        else {
+            fs.writeFile(outputPath, render(employeeList), err => {
+                if(err) throw err;
+            });
+        }
+    });
+}
+
+// Initialize the application
+init();
+
+
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
